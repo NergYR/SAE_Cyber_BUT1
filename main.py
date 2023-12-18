@@ -10,3 +10,21 @@ for packet in packets:
 
 with open(output_file, 'wb') as f:
     f.write(ftp_data) 
+    
+
+def read_data_password(packets):
+    password = b''
+    for packet in packets[4]:
+        if 'Raw' in packet :
+            password += bytes(packet['Raw'].load)
+    return password
+
+def read_data_username(packets):
+    username = b''
+    for packet in packets[2]:
+        if 'Raw' in packet :
+            username += bytes(packet['Raw'].load)
+    return username
+
+print(read_data_password(packets))
+print(read_data_username(packets))
