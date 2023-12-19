@@ -90,18 +90,13 @@ def decode_pdf(extracted_text):
 
 
 
-def recherche_text(packets, field, string=None):
+def recherche_text(packets, string=None):
     tcp = []
     for packet in packets:
-        if field=="Raw" in packet:
+        if "Raw" in packet:
             if string in (packet['Raw'].load):
                 #print(packet["Raw"].load.split(sep=None)[1].decode("UTF-8"))
                 return packet["Raw"].load.split(sep=None)[1].decode("UTF-8")
-        elif field=='TCP'in packet:
-            tcp.append(packet['TCP'].load)
-            tcp_ports = b''.join(tcp)
-            # Recuperer seulement les 2 dernierers valeurs premier port*256 + 2e port
-            return tcp_ports.decode("UTF-8")
 
 
 decode_pdf(extracted_text)
@@ -111,10 +106,14 @@ decode_pdf(extracted_text)
 
 
 
-print(recherche_text(packets,"Raw", b"USER"))    
-print(recherche_text(packets,"Raw", b"PASS"))
-print(recherche_text(packets,"Raw", b"PORT"))
-port = recherche_text(packets,"Raw", b"PORT").split(",")
+print(recherche_text(packets, b"USER"))    
+print(recherche_text(packets, b"PASS"))
+print(recherche_text(packets, b"PORT"))
+port = recherche_text(packets, b"PORT").split(",")
 port_s = int(port[4]) * 256 + int(port[5])
 print(port_s)
-print(recherche_text(packets,"Raw", b"RETR"))
+print(recherche_text(packets, b"RETR"))
+
+
+
+
