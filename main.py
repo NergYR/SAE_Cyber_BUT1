@@ -77,9 +77,44 @@ pdf_path = output_file
 extracted_text = extract_text_from_pdf(pdf_path)
 print(extracted_text)
 
-for i in range(len(extracted_text)):
-    print(extracted_text[i], end="")
-    line = extracted_text[i]
-    print(line)
-    
+def decode_pdf(extracted_text):
+    for i in range(len(extracted_text)):
+        #print(extracted_text[i], end="")
+        line = extracted_text[i]
+        #print(line)
+        for j in range(len(line)):
+            if line[j] in key:
+                print(key[line[j]], end="")
+            else:
+                print(line[j], end="")
 
+
+
+def recherche_text(packets, field, string=None):
+    tcp = []
+    for packet in packets:
+        if field=="Raw" in packet:
+            if string in (packet['Raw'].load):
+                #print(packet["Raw"].load.split(sep=None)[1].decode("UTF-8"))
+                return packet["Raw"].load.split(sep=None)[1].decode("UTF-8")
+        elif field=='TCP'in packet:
+            tcp.append(packet['TCP'].load)
+            tcp_ports = b''.join(tcp)
+            # Recuperer seulement les 2 dernierers valeurs premier port*256 + 2e port
+            return tcp_ports.decode("UTF-8")
+
+
+decode_pdf(extracted_text)
+
+
+
+
+
+
+print(recherche_text(packets,"Raw", b"USER"))    
+print(recherche_text(packets,"Raw", b"PASS"))
+print(recherche_text(packets,"Raw", b"PORT"))
+port = recherche_text(packets,"Raw", b"PORT").split(",")
+port_s = int(port[4]) * 256 + int(port[5])
+print(port_s)
+print(recherche_text(packets,"Raw", b"RETR"))
