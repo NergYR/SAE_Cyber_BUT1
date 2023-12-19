@@ -79,5 +79,7 @@ print(extracted_text)
 
 for i in range(len(extracted_text)):
     print(extracted_text[i], end="")
+    line = extracted_text[i]
+    print(line)
     
 
