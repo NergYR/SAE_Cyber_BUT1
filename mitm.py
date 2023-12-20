@@ -15,7 +15,6 @@ with open(output_file, 'wb') as f:
     
     
 def recherche_text(packets, string=None):
-    tcp = []
     for packet in packets:
         if "Raw" in packet:
             if string in (packet['Raw'].load):
