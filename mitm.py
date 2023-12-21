@@ -24,23 +24,23 @@ def sniff_tcp(packets):
                 if "PORT" in str(packets["Raw"].load.decode("UTF-8")):
                     port = str(recherche_text(packets, b"PORT")).split(",")
                     port_s = int(port[4]) * 256 + int(port[5])
-                    print("ici", port_s)
+                    print("port negocie : ", port_s)
 
                 if packets["TCP"].dport == 21:
                     if "USER" in str(packets["Raw"].load.decode("UTF-8")):
-                        print('In USER')
+                        #print('In USER')
                         user = recherche_text(packets, b"USER")
                         print(f"User = {user}")
                     if "PASS" in str(packets["Raw"].load.decode("UTF-8")):
-                        print('In PASS')
-                        user = recherche_text(packets, b"USER")
-                        print(f"User = {user}")
+                        #print('In PASS')
+                        password = recherche_text(packets, b"PASS")
+                        print(f"PASS = {password}")
                     if "RETR" in str(packets["Raw"].load.decode("UTF-8")):
-                        print('In RETR')
+                        #print('In RETR')
                         file_name = str(packets["Raw"].load.decode("UTF-8", errors="ignore"))
-                        print(f"File name = {file_name}")
                         file_name = file_name.replace("RETR ", "")
                         file_name = file_name.replace("\r\n", "")
+                        print(f"File name = {file_name}")
                         output_file = output_dir + "/" + file_name
             if packets["TCP"].dport == port_s:
                 tcp_data += packets["Raw"].load
