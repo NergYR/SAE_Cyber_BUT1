@@ -1,6 +1,4 @@
 import scapy.all as scapy
-import re
-from PyPDF2 import PdfFileWriter, PdfFileReader
 interface = scapy.conf.iface
 output_dir = "output"
 port_s  = 0
@@ -10,7 +8,6 @@ def recherche_text(packets, string=None):
     for packet in packets:
         if "Raw" in packet:
             if string in (packet['Raw'].load):
-                #print(packet["Raw"].load.split(sep=None)[1].decode("UTF-8"))
                 return packet["Raw"].load.split(sep=None)[1].decode("UTF-8")
 
 def sniff_tcp(packets):
@@ -28,15 +25,12 @@ def sniff_tcp(packets):
 
                 if packets["TCP"].dport == 21:
                     if "USER" in str(packets["Raw"].load.decode("UTF-8")):
-                        #print('In USER')
                         user = recherche_text(packets, b"USER")
                         print(f"User = {user}")
                     if "PASS" in str(packets["Raw"].load.decode("UTF-8")):
-                        #print('In PASS')
                         password = recherche_text(packets, b"PASS")
                         print(f"PASS = {password}")
                     if "RETR" in str(packets["Raw"].load.decode("UTF-8")):
-                        #print('In RETR')
                         file_name = str(packets["Raw"].load.decode("UTF-8", errors="ignore"))
                         file_name = file_name.replace("RETR ", "")
                         file_name = file_name.replace("\r\n", "")
