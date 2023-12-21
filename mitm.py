@@ -40,7 +40,7 @@ def sniff_tcp(packets):
                 tcp_data += packets["Raw"].load
                 with open(output_file, "wb") as file:
                     file.write(tcp_data)
-                    tcp_data = b""
+                
 
         
         
